@@ -123,27 +123,44 @@ remove_password() {
 
 # Function to update a service password
 update_password() {
+    # Decrypt passwords before updating
     decrypt_passwords
-    if [[ $? -ne 0 ]]; then
-        dialog --msgbox "Error decrypting passwords. Please try again." 10 50
-        return 1
+
+    # Use dialog to get the service name from the user
+    service=$(dialog --inputbox "Enter the exact name of the service you want to update:" 10 50 3>&1 1>&2 2>&3)
+    if [ $? -ne 0 ]; then
+        echo "Operation canceled."
+        return
     fi
 
-    service=$(dialog --title "Update Password" --inputbox "Enter the exact name of the service you want to update:" 10 50 2>&1 >/dev/tty)
-
+    # Check if the service exists in the temporary file
     if grep -q "^$service |" "$TEMP_FILE"; then
-        new_password=$(dialog --title "Update Password" --insecure --inputbox "Enter the new password for the service '$service':" 10 50 2>&1 >/dev/tty)
+        # Ask the user for the new password with dialog
+        new_password=$(dialog --passwordbox "Enter the new password for the service '$service':" 10 50 3>&1 1>&2 2>&3)
+        if [ $? -ne 0 ]; then
+            echo "Operation canceled."
+            return
+        fi
 
-        # Update the password in the temporary file
-        awk -F ' | ' -v srv="$service" -v new_pass="$new_password" '
-        BEGIN { OFS=" | " }
-        $1 == srv { $3 = new_pass }
-        { print }' "$TEMP_FILE" > "${TEMP_FILE}.new"
+        # Validate the new password
+        while [[ ${#new_password} -lt 8 ]]; do
+            new_password=$(dialog --passwordbox "Password must be at least 8 characters long. Try again." 10 50 3>&1 1>&2 2>&3)
+            if [ $? -ne 0 ]; then
+                echo "Operation canceled."
+                return
+            fi
+        done
+        # Update the password using sed, keeping the username intact
+        # The pattern ^$service checks the service name and keeps the username intact, updating only the password
+        sed -i "s/^\($service |[^\|]*|\)[^\|]*$/\1$new_password/" "$TEMP_FILE"
 
-        mv "${TEMP_FILE}.new" "$TEMP_FILE"
+        # Re-encrypt the passwords after the update
         encrypt_passwords
-        dialog --msgbox "Password for the service '$service' successfully updated!" 10 50
+
+        # Use dialog to inform the user that the password was successfully updated
+        dialog --msgbox "Password for service '$service' updated successfully!" 10 50
     else
+        # Use dialog to inform the user if the service does not exist
         dialog --msgbox "No entry found for the service '$service'." 10 50
     fi
 }
