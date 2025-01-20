@@ -4,20 +4,47 @@ This is a simple script for password management, where you can add, search, remo
 
 ## Installation and Configuration
 
-To make it easier to use, it is recommended to create an alias for the script, so you can call it from anywhere in the terminal.
+To make it easier to use, it is recommended to use the provided installation script. This will install the password manager and configure it for easy access.
 
-### 1. Create an alias
+### 1. Install the Password Manager
 
-Add the following alias to your `~/.bashrc` or `~/.zshrc` file, depending on the shell you use. This allows you to run the script with a simple command from any directory:
+Run the installation script to install and configure the password manager:
+
+```bash
+./install.sh
+```
+
+This script will:
+
+- Copy the `password_manager.sh` script to the appropriate directory (`~/.password_manager`).
+- Set up the alias to allow running the script from anywhere in the terminal.
+- Prompt you to create a master password.
+
+### 2. Uninstall the Password Manager
+
+To uninstall the password manager and remove all configurations, run the uninstall script:
+
+```bash
+./uninstall.sh
+```
+
+This will:
+
+- Remove the `password_manager.sh` script from `~/.password_manager`.
+- Remove the alias from your shell configuration.
+  
+### 3. Create an alias (if not using the install script)
+
+If you prefer to manually set up the alias, add the following line to your `~/.bashrc` or `~/.zshrc` file, depending on your shell:
 
 ```bash
 alias password_manager='/path/to/password_manager.sh'
 ```
 
-Replace `/path/to/password_manager.sh` with the full path to the script. For example, if the script is in your `~/scripts` folder, the line will look like this:
+Replace `/path/to/password_manager.sh` with the full path to the script. For example, if the script is in your `~/.password_manager` folder, the line will look like this:
 
 ```bash
-alias password_manager='~/scripts/password_manager.sh'
+alias password_manager='~/.password_manager/password_manager.sh'
 ```
 
 After adding the alias, run the following command to reload the shell configuration file:
@@ -32,7 +59,7 @@ Now, you can call the script from anywhere with the command:
 password_manager
 ```
 
-### 2. Making the script executable
+### 4. Making the script executable
 
 Make sure the script has execution permissions. To do this, run the following command:
 
