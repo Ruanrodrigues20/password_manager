@@ -1,6 +1,6 @@
 #!/bin/bash
 
-USER_DIR="data/$(whoami)"
+USER_DIR="$HOME/.password_manager/data/$(whoami)"
 mkdir -p "$USER_DIR"
 PASSWORD_FILE="$USER_DIR/passwords.enc"
 TEMP_FILE="$USER_DIR/passwords.tmp"

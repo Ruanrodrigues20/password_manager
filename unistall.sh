@@ -21,3 +21,4 @@ source "$SHELL_RC"
 
 echo "Desinstalação concluída!"
 
+source $HOME/.bashrc || source $HOME/.zshrc
