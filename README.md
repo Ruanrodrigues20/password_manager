@@ -95,6 +95,6 @@ Now, the script is ready to be executed!
 
 ## License
 
-This project is open-source and distributed under the MIT License.[MIT License](LICENSE.txt)
+This project is open-source and distributed under the [MIT License](LICENSE.txt).
 
 ---
